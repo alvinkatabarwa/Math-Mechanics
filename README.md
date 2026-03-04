@@ -1,6 +1,6 @@
-# Math Mechanics (Unity Android App)
+# MathMechanics (Unity Android App)
 
-**Math Mechanics** is a Unity-based math game with two modes:
+**MathMechanics** is a Unity-based math game with two modes:
 - **Campaign Mode**: Levels 1–20 with increasing difficulty tiers
 - **Timed Mode**: 60-second challenge, score = correct answers
 
@@ -9,7 +9,7 @@
 ## Requirements
 - Unity: **6000.2.12f1**
 - Platform: **Android**
-- Device tested: **SAMSUNG A06**
+- Device tested: **Samsung A06**
 
 ---
 
@@ -25,7 +25,7 @@
 
 ## How to Install and Run (Android APK)
 1. Locate the APK in this repo:
-   - `Builds/Android/APP_NAME.apk`
+   - `Builds/Android/MathMechanics.apk`
 2. Copy the APK to your Android phone (USB / Google Drive / email)
 3. On your phone, enable **Install unknown apps** for your file manager (Files/Drive)
 4. Tap the APK → **Install**
@@ -36,13 +36,13 @@
 ---
 
 ## Demo Video (5 minutes)
-- Link: **PASTE YOUR VIDEO LINK HERE (YouTube Unlisted or Google Drive)**
+- Link: https://youtu.be/ykSul2jRNpU?si=1OeSheObHLxhokQu
 
 ---
 
 ## Deployment
 - Deployment type: **Android APK**
-- Build verified: ✅ Installed and run successfully on **SAMSUNG A06**
+- Build verified: ✅ Installed and run successfully on Android device
 - Core features verified on device: Campaign loop, Timed countdown, Results panel, Retry/Next navigation
 
 ---
