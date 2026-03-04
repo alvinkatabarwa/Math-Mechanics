@@ -119,6 +119,56 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &61298929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 61298931}
+  - component: {fileID: 61298930}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &61298930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 61298929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ffbfc6b0d73090429cdb8c68b964cc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MathMechanics.AudioManager
+  musicSource: {fileID: 0}
+  sfxSource: {fileID: 0}
+  campaignLoop: {fileID: 8300000, guid: a82c404d53ee7dc489e265f95430fdb2, type: 3}
+  timedLoop: {fileID: 8300000, guid: 6dd22f81533e3204292b46ce19220046, type: 3}
+  correctSfx: {fileID: 8300000, guid: 18adddeb01315dd4d98d6478774ab861, type: 3}
+  incorrectSfx: {fileID: 8300000, guid: bbb56679b88d1d745afa7d8fb18334d1, type: 3}
+--- !u!4 &61298931
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 61298929}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 545.7509, y: 355.80325, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &114133954
 GameObject:
   m_ObjectHideFlags: 0
@@ -5195,3 +5245,4 @@ SceneRoots:
   - {fileID: 1975836302}
   - {fileID: 1302730642}
   - {fileID: 1413796159}
+  - {fileID: 61298931}

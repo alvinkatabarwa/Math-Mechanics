@@ -65,6 +65,11 @@ namespace MathMechanics
                 return;
             }
 
+            // ✅ Start correct background loop for this mode
+            Debug.Log("AudioManager.Instance = " + (AudioManager.Instance != null ? "OK" : "NULL"));
+            Debug.Log("Audio: PlayLoopForMode -> " + AppManager.Instance.SelectedMode);
+            AudioManager.Instance?.PlayLoopForMode(AppManager.Instance.SelectedMode);
+
             if (IsTimed)
             {
                 timeLeft = TIMED_DURATION;
@@ -97,7 +102,6 @@ namespace MathMechanics
                 else StartLevel(currentLevel);
             }
         }
-
         private void Update()
         {
             if (!IsTimed) return;
@@ -127,7 +131,7 @@ namespace MathMechanics
             gameUI.ClearHint();
             gameUI.ClearInput();
 
-            // Difficulty ramp based on score
+            // Difficulty ramp based on score (simple & stable)
             int pseudoLevel;
             if (timedScore < 3) pseudoLevel = 3;          // easy bucket
             else if (timedScore < 6) pseudoLevel = 8;     // medium bucket
@@ -137,17 +141,20 @@ namespace MathMechanics
             currentQuestion = questionService.GenerateForLevel(pseudoLevel);
             hintSystem.ResetForNewQuestion(currentQuestion);
 
-            // ✅ Clean banner for users
+            // ✅ Clean banner for timed users (no fake LVL number)
             gameUI.SetHeader($"TIMED: {currentQuestion.tier.ToString().ToUpper()}");
 
             gameUI.SetQuestion(currentQuestion.prompt);
-            gameUI.SetStepPrompt("");
+            gameUI.SetStepPrompt(""); // no step mode in timed
         }
 
         private void EndTimedMode()
         {
             state = GameState.ShowingResults;
             inputLocked = true;
+
+            // ✅ Buzz sound when time ends
+            AudioManager.Instance?.PlayBuzz();
 
             gameUI.SetInputInteractable(false);
             gameUI.SetHintButtonInteractable(false);
@@ -158,7 +165,7 @@ namespace MathMechanics
             sb.AppendLine();
             sb.AppendLine("Tap Retry to play again.");
 
-            // nextEnabled=false => Retry will show (per updated ResultsPanelUI)
+            // nextEnabled=false => Retry shows in timed results
             resultsUI.Show(success: true, details: sb.ToString().Trim(), nextEnabled: false, nextIsFinish: false);
         }
 
@@ -215,6 +222,7 @@ namespace MathMechanics
                 return;
             }
 
+            // Campaign step solving (levels 1–10)
             if (currentQuestion.HasSteps)
             {
                 if (!int.TryParse(input, out int value))
@@ -230,6 +238,7 @@ namespace MathMechanics
                     return;
                 }
 
+                // Step correct
                 gameUI.SetQuestion(currentQuestion.stepResultEquations[stepIndex]);
                 stepIndex++;
 
@@ -241,10 +250,12 @@ namespace MathMechanics
                     return;
                 }
 
+                // Finished all steps => pass
                 EndCampaignLevel(correct: true, validInput: true);
                 return;
             }
 
+            // Campaign final-answer mode (11–20)
             ValidationResult finalResult = validator.Validate(currentQuestion, input);
             EndCampaignLevel(correct: finalResult.isCorrect, validInput: finalResult.isValidNumber);
         }
@@ -258,6 +269,11 @@ namespace MathMechanics
 
             bool passed = validInput && correct;
 
+            // ✅ Campaign result sounds
+            if (passed) AudioManager.Instance?.PlayCorrect();
+            else AudioManager.Instance?.PlayIncorrect();
+
+            // Streak rules
             if (!validInput)
                 streakSystem.OnWrong();
             else if (passed)
@@ -268,6 +284,7 @@ namespace MathMechanics
             AppManager.Instance.CurrentStreak = streakSystem.CurrentStreak;
             gameUI.SetStreak(streakSystem.CurrentStreak);
 
+            // Unlock / Next + Finish mode
             bool nextEnabled = false;
             bool nextIsFinish = false;
 
@@ -282,10 +299,11 @@ namespace MathMechanics
                 else
                 {
                     nextEnabled = true;
-                    nextIsFinish = true;
+                    nextIsFinish = true; // Level 20 -> Next becomes Home
                 }
             }
 
+            // Details text
             var sb = new StringBuilder();
             sb.AppendLine($"Streak: {streakSystem.CurrentStreak}");
             sb.AppendLine($"Hint used: {(hintSystem.HintUsedThisLevel ? "YES" : "NO")}");
