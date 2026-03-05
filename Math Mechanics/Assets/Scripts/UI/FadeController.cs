@@ -30,14 +30,11 @@ namespace MathMechanics
 
         private IEnumerator FadeOutInRoutine(Action midAction)
         {
-            // Fade OUT
-            canvasGroup.blocksRaycasts = true; // block clicks during transition
+            canvasGroup.blocksRaycasts = true;
             yield return FadeTo(1f, fadeOutDuration);
 
-            // Do the level switch in the dark
             midAction?.Invoke();
 
-            // Fade IN
             yield return FadeTo(0f, fadeInDuration);
             canvasGroup.blocksRaycasts = false;
 

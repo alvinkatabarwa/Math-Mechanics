@@ -80,25 +80,21 @@ namespace MathMechanics
             if (overlay != null) overlay.SetActive(true);
             gameObject.SetActive(true);
 
-            // Title
             if (resultTitleTMP != null)
             {
                 resultTitleTMP.text = success ? "CORRECT!" : "INCORRECT!";
                 resultTitleTMP.color = success ? correctColor : incorrectColor;
             }
 
-            // Details (neutral)
             if (resultDetailsTMP != null)
             {
                 resultDetailsTMP.text = details;
                 resultDetailsTMP.color = neutralColor;
             }
 
-            // ✅ UPDATED: Retry shows on failure OR when there is no Next (Timed mode)
             if (retryButton != null)
                 retryButton.gameObject.SetActive(!success || !nextEnabled);
 
-            // Next button only for campaign pass
             if (nextButton != null)
             {
                 bool showNext = success && nextEnabled;

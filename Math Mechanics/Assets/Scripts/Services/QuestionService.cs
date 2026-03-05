@@ -30,8 +30,8 @@ namespace MathMechanics
         // -------------------------
         // EASY: ax + b = 0
         // Step mode:
-        //  Step 1: enter (-b) so equation becomes ax = -b
-        //  Step 2: enter x
+        //  Step 1: type in (-b) so it becomes ax = -b
+        //  Step 2: type in x
         // -------------------------
         private Question GenerateEasy(int levelIndex)
         {
@@ -43,7 +43,7 @@ namespace MathMechanics
 
             int rhsAfterMove = -b; // ax = -b
 
-            // ✅ Beginner-friendly prompts (no RHS/LHS)
+            // Prompts are kept simple on purpose (no LHS/RHS wording)
             string[] stepPrompts =
             {
                 $"Step 1/2: Fill the blank → {a}x = ?",
@@ -62,7 +62,7 @@ namespace MathMechanics
                 $"x = {x}"
             };
 
-            // Short hint (no answer)
+            // Quick nudge without giving the answer away
             string stepHint = CleanSpaces($"Move {b} to the other side → {a}x = {-b}\nThen divide by {a}.");
 
             return new Question
@@ -82,8 +82,8 @@ namespace MathMechanics
         // -------------------------
         // MEDIUM: ax + b = cx + d
         // Step mode:
-        //  Step 1: enter (d - b) so equation becomes (a-c)x = (d-b)
-        //  Step 2: enter x
+        //  Step 1: type in (d - b) so it becomes (a-c)x = (d-b)
+        //  Step 2: type in x
         // -------------------------
         private Question GenerateMedium(int levelIndex)
         {
@@ -103,7 +103,7 @@ namespace MathMechanics
             int coeff = a - c; // (a-c)x
             int rhs = d - b;   // d - b
 
-            // ✅ Beginner-friendly prompts (no RHS/LHS)
+            // Same idea as easy: keep the wording super direct
             string[] stepPrompts =
             {
                 $"Step 1/2: Fill the blank → {coeff}x = ?",
@@ -140,7 +140,7 @@ namespace MathMechanics
 
         // -------------------------
         // INTERMEDIATE: x^2 + bx + c = 0
-        // (Final-answer mode for deadline safety)
+        // Final-answer only for now (keeps this tier quick and predictable)
         // -------------------------
         private Question GenerateIntermediate(int levelIndex)
         {
@@ -152,7 +152,7 @@ namespace MathMechanics
             int c = r1 * r2;
 
             string prompt = BuildQuadraticPrompt(b, c);
-            string stepHint = CleanSpaces($"Try factoring\nFind two nums: sum {b}, product {c}.");
+            string stepHint = CleanSpaces($"Try factoring\nLook for two numbers: sum {b}, product {c}.");
 
             return new Question
             {
@@ -170,7 +170,7 @@ namespace MathMechanics
 
         // -------------------------
         // BOSS: (x + a)(x + b) = c
-        // (Final-answer mode for deadline safety)
+        // Final-answer only for now (no step mode here)
         // -------------------------
         private Question GenerateBoss(int levelIndex)
         {
@@ -185,7 +185,7 @@ namespace MathMechanics
             int x1 = -(a + b) - x0;
 
             string prompt = CleanSpaces($"(x {FormatSigned(a)})(x {FormatSigned(b)}) = {c}");
-            string stepHint = CleanSpaces($"Expand then move {c} over\nSolve the quadratic (factor if possible).");
+            string stepHint = CleanSpaces($"Expand it, move {c} over\nThen solve the quadratic (factoring works a lot of the time).");
 
             return new Question
             {

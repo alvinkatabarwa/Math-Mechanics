@@ -28,10 +28,8 @@ namespace MathMechanics
         private bool inputLocked;
         private bool hintLocked;
 
-        // Campaign step tracking
         private int stepIndex;
 
-        // Timed mode tracking (simple score only)
         private float timeLeft;
         private int timedScore;
 
@@ -65,7 +63,6 @@ namespace MathMechanics
                 return;
             }
 
-            // ✅ Start correct background loop for this mode
             Debug.Log("AudioManager.Instance = " + (AudioManager.Instance != null ? "OK" : "NULL"));
             Debug.Log("Audio: PlayLoopForMode -> " + AppManager.Instance.SelectedMode);
             AudioManager.Instance?.PlayLoopForMode(AppManager.Instance.SelectedMode);
@@ -80,10 +77,8 @@ namespace MathMechanics
                 gameUI.SetTimer(timeLeft);
                 gameUI.SetScore(timedScore);
 
-                // Hide step prompt in timed
                 gameUI.SetStepPrompt("");
 
-                // Streak not used in timed
                 streakSystem.Set(0);
                 gameUI.SetStreak(0);
 
@@ -116,8 +111,6 @@ namespace MathMechanics
                 EndTimedMode();
         }
 
-        // ---------------- TIMED MODE ----------------
-
         private void StartTimedRound()
         {
             state = GameState.Playing;
@@ -131,21 +124,19 @@ namespace MathMechanics
             gameUI.ClearHint();
             gameUI.ClearInput();
 
-            // Difficulty ramp based on score (simple & stable)
             int pseudoLevel;
-            if (timedScore < 3) pseudoLevel = 3;          // easy bucket
-            else if (timedScore < 6) pseudoLevel = 8;     // medium bucket
-            else if (timedScore < 9) pseudoLevel = 13;    // intermediate bucket
-            else pseudoLevel = 18;                        // boss bucket
+            if (timedScore < 3) pseudoLevel = 3;
+            else if (timedScore < 6) pseudoLevel = 8;
+            else if (timedScore < 9) pseudoLevel = 13;
+            else pseudoLevel = 18;
 
             currentQuestion = questionService.GenerateForLevel(pseudoLevel);
             hintSystem.ResetForNewQuestion(currentQuestion);
 
-            // ✅ Clean banner for timed users (no fake LVL number)
             gameUI.SetHeader($"TIMED: {currentQuestion.tier.ToString().ToUpper()}");
 
             gameUI.SetQuestion(currentQuestion.prompt);
-            gameUI.SetStepPrompt(""); // no step mode in timed
+            gameUI.SetStepPrompt("");
         }
 
         private void EndTimedMode()
@@ -153,7 +144,6 @@ namespace MathMechanics
             state = GameState.ShowingResults;
             inputLocked = true;
 
-            // ✅ Buzz sound when time ends
             AudioManager.Instance?.PlayBuzz();
 
             gameUI.SetInputInteractable(false);
@@ -165,11 +155,8 @@ namespace MathMechanics
             sb.AppendLine();
             sb.AppendLine("Tap Retry to play again.");
 
-            // nextEnabled=false => Retry shows in timed results
             resultsUI.Show(success: true, details: sb.ToString().Trim(), nextEnabled: false, nextIsFinish: false);
         }
-
-        // ---------------- CAMPAIGN MODE ----------------
 
         private void StartLevel(int levelIndex)
         {
@@ -222,7 +209,6 @@ namespace MathMechanics
                 return;
             }
 
-            // Campaign step solving (levels 1–10)
             if (currentQuestion.HasSteps)
             {
                 if (!int.TryParse(input, out int value))
@@ -238,7 +224,6 @@ namespace MathMechanics
                     return;
                 }
 
-                // Step correct
                 gameUI.SetQuestion(currentQuestion.stepResultEquations[stepIndex]);
                 stepIndex++;
 
@@ -250,12 +235,10 @@ namespace MathMechanics
                     return;
                 }
 
-                // Finished all steps => pass
                 EndCampaignLevel(correct: true, validInput: true);
                 return;
             }
 
-            // Campaign final-answer mode (11–20)
             ValidationResult finalResult = validator.Validate(currentQuestion, input);
             EndCampaignLevel(correct: finalResult.isCorrect, validInput: finalResult.isValidNumber);
         }
@@ -269,11 +252,9 @@ namespace MathMechanics
 
             bool passed = validInput && correct;
 
-            // ✅ Campaign result sounds
             if (passed) AudioManager.Instance?.PlayCorrect();
             else AudioManager.Instance?.PlayIncorrect();
 
-            // Streak rules
             if (!validInput)
                 streakSystem.OnWrong();
             else if (passed)
@@ -284,7 +265,6 @@ namespace MathMechanics
             AppManager.Instance.CurrentStreak = streakSystem.CurrentStreak;
             gameUI.SetStreak(streakSystem.CurrentStreak);
 
-            // Unlock / Next + Finish mode
             bool nextEnabled = false;
             bool nextIsFinish = false;
 
@@ -299,11 +279,10 @@ namespace MathMechanics
                 else
                 {
                     nextEnabled = true;
-                    nextIsFinish = true; // Level 20 -> Next becomes Home
+                    nextIsFinish = true;
                 }
             }
 
-            // Details text
             var sb = new StringBuilder();
             sb.AppendLine($"Streak: {streakSystem.CurrentStreak}");
             sb.AppendLine($"Hint used: {(hintSystem.HintUsedThisLevel ? "YES" : "NO")}");
